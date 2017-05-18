@@ -12,7 +12,6 @@ transpose_op = lambda perm: tf.transpose(image, perm=perm) # rotate 90 to the le
 reverse_op = lambda vector: tf.reverse(image, vector) # flip vertically
 slice_op = lambda start, size: tf.slice(image, start, size) # slice out a portion
 
-
 feed = {image: raw_image_data}
 
 init_op = tf.global_variables_initializer()
@@ -26,13 +25,14 @@ with tf.Session() as session:
     right_slice_result = session.run(slice_op([200, 350, 0], [250, 250, 3]), feed_dict=feed)
     center_slice_result = session.run(slice_op([50, 300, 0], [250, 250, 3]), feed_dict=feed)
 
-    color_result = session.run(transpose_op([2, 0, 1]), feed_dict={image: center_slice_result[2]})
-
 fig, axarr = plt.subplots(3, 3)
 
+for i in range(3):
+    for j in range(3):
+        axarr[i, j].set_xticks([])
+        axarr[i, j].set_yticks([])
 
 axarr[0, 1].imshow(center_slice_result)
-axarr[0, 0].imshow(color_result)
 
 axarr[1, 0].imshow(left_slice_result)
 axarr[1, 1].imshow(raw_image_data)
@@ -42,4 +42,5 @@ axarr[2, 0].imshow(transpose_left_result)
 axarr[2, 1].imshow(vertical_flip_result)
 axarr[2, 2].imshow(transpose_right_result)
 
+plt.savefig("./image_translations.png")
 plt.show()
